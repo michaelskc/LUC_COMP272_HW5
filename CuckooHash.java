@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Michael Simmons / COMP272-400C
  *
  *   Note, additional comments provided throughout this source code
  *   is for educational purposes
@@ -244,14 +244,54 @@ public class CuckooHash<K, V> {
      * @param value the value of the element to add
 	 */
 
- 	public void put(K key, V value) {
+	public void put(K key, V value) {
 
-		// ADD YOUR CODE HERE - DO NOT FORGET TO ADD YOUR NAME AT TOP OF FILE.
-		// Also make sure you read this method's prologue above, it should help
-		// you. Especially the two HINTS in the prologue.
+		// Initialize a count integer and a primary bucket position using the first hash function
+		int count = 0;
+		int pos = hash1(key);
 
-		return;
+		// Set the current key and value to the passed key and value
+		K currentKey = key;
+		V currentValue = value;
+
+		// While there's still space in the table (count < CAPACITY):
+		while (count < CAPACITY) {
+			// If the bucket is free, we can just insert the element like normal
+			if (table[pos] == null) {
+				table[pos] = new Bucket<>(currentKey, currentValue);
+				return;
+			}
+
+			// If the current bucket already contains the same key and value, we can just return b/c no duplicates
+			if (table[pos].getBucKey().equals(currentKey) && table[pos].getValue().equals(currentValue)) {
+				return;
+			}
+
+			// Otherwise, create a new bucket with the current key and value
+			// Also create a temp bucket to store the current bucket's key and value
+			Bucket<K, V> tempBucket = table[pos];
+			table[pos] = new Bucket<>(currentKey, currentValue);
+			// The removed element that we will need to insert to a different location
+			currentKey = tempBucket.getBucKey();
+			currentValue = tempBucket.getValue();
+
+			// If the current position is hash1, then use hash2. Otherwise, use hash1
+			if (pos == hash1(currentKey)) {
+				pos = hash2(currentKey);
+			}
+			else {
+				pos = hash1(currentKey);
+			}
+
+			// Increment the count, since an item has been inserted
+			count++;
+		}
+		// If we can't find an empty bucket after CAPACITY iterations, then we need to rehash and try again:
+		rehash();
+		put(currentKey, currentValue);
+		// This should repeat until we find an empty bucket or until we reach the max capacity
 	}
+
 
 
 	/**

@@ -1,6 +1,6 @@
 /******************************************************************
  *
- *   YOUR NAME / SECTION NUMBER
+ *   Michael Simmons / COMP272-400C
  *
  *   This java file contains the problem solutions of isSubSet, findKthLargest,
  *   and sort2Arrays methods. You should utilize the Java Collection Framework for
@@ -32,9 +32,22 @@ class ProblemSolutions {
 
     public boolean isSubset(int list1[], int list2[]) {
 
-        // ADD YOU CODE HERE -- DON'T FORGET TO ADD YOR NAME AT TOP OF FILE
+        // Create a Hashset to store list1
+        HashSet<Integer> set = new HashSet<>();
+        // Add each item in list1 to the set
+        for (int num : list1) {
+            set.add(num);
+        }
+        // Compare list2 to the set. If there's any conflicts, we can stop and return false
+        // Otherwise, return true after the loop is done.
 
-        return false;
+        for (int num : list2) {
+            if (!set.contains(num)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
@@ -53,9 +66,10 @@ class ProblemSolutions {
 
     public int findKthLargest(int[] array, int k) {
 
-        // ADD YOUR CODE HERE
-
-        return 0;
+        // Sort the array
+        Arrays.sort(array);
+        // Return the element at length - k
+        return array[array.length - k];
     }
 
 
@@ -73,10 +87,18 @@ class ProblemSolutions {
      */
 
     public int[] sort2Arrays(int[] array1, int[] array2) {
+        // Create a new array to store the merged arrays
+        int[] mergedArrays = new int[array1.length + array2.length];
 
-        // ADD YOU CODE HERE
+        // I think it's faster to sort after we copy the elements to the new array
+        // Copy the elements from array1 to mergedArrays
+        System.arraycopy(array1, 0, mergedArrays, 0, array1.length);
+        // Copy the elements from array2 to mergedArrays
+        System.arraycopy(array2, 0, mergedArrays, array1.length, array2.length);
 
-        return null;
+        // Merge both arrays
+        Arrays.sort(mergedArrays);
+        return mergedArrays;
     }
 
 }
